@@ -135,7 +135,10 @@ class SFTPStorage(BaseStorage):
             self._mkdir(dirname)
 
         f = self.sftp.open(path, 'wb')
-        f.write(content.file.read())
+        while True:
+            data = content.file.read(1048576)
+            if not data: break
+            f.write(data)
         f.close()
 
         # set file permissions if configured
